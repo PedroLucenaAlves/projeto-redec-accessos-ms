@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Redec Accesos Terceros MS
+  description: API para gerenciamento e controle de acessos de funcionários terceiros.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+    description: Ambiente de Desenvolvimento Local
+
+paths:
+  /acessos:
+    post:
+      summary: Registra a solicitação de acesso de um terceiro
+      operationId: registrarAcesso
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SolicitacaoAcesso'
+      responses:
+        '201':
+          description: Solicitação de acesso registrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcessoRegistradoResponse'
+        '400':
+          description: Dados de requisição inválidos (Erro de validação)
+        '500':
+          description: Erro interno no servidor
+
+components:
+  schemas:
+    SolicitacaoAcesso:
+      type: object
+      required:
+        - nome
+        - documento
+        - empresaOrigem
+        - areaDestino
+      properties:
+        nome:
+          type: string
+          example: "João Silva"
+        documento:
+          type: string
+          description: "CPF ou Passaporte do terceiro"
+          example: "12345678909"
+        empresaOrigem:
+          type: string
+          example: "Terceirizada Logística LTDA"
+        areaDestino:
+          type: string
+          example: "Hangar 2 - Manutenção"
+
+    AcessoRegistradoResponse:
+      type: OBJECT
+      properties:
+        idSolicitacao:
+          type: string
+          format: uuid
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        status:
+          type: string
+          example: "PROCESSANDO"
+        dataRegistro:
+          type: string
+          format: date-time
+          example: "2026-05-20T14:30:00Z"

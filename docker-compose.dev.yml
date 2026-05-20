@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  accesos-ms:
+    container_name: redec-accesos-ms
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # Lendo a porta do arquivo .env.dev
+      - "${PORTA_APP}:${PORTA_APP}"
+    environment:
+      # Lendo o profile do arquivo .env.dev
+      - SPRING_PROFILES_ACTIVE=${PROFILE_ATIVO}
+      - TZ=America/Sao_Paulo
