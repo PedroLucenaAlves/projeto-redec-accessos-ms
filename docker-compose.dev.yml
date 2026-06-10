@@ -13,3 +13,22 @@ services:
       # Lendo o profile do arquivo .env.dev
       - SPRING_PROFILES_ACTIVE=${PROFILE_ATIVO}
       - TZ=America/Sao_Paulo
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_DEFAULT_USER}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS}
+    env_file:
+      - .env.dev
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: redec-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"   # Porta do protocolo AMQP (para o Java enviar mensagens)
+      - "15672:15672" # Porta da Interface Gráfica (para nós gerenciarmos as filas)
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
