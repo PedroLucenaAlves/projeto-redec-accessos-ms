@@ -10,5 +10,14 @@ Este repositório contém a configuração base de infraestrutura via Docker par
 
 ### 2. Passo a Passo para Deploy Local
 Antes de subir o container, é obrigatório gerar o executável (`.jar`) atualizado:
+> **Obs:** Sempre que atualizar o código Java, é necessário gerar o `.jar` novamente antes de reiniciar o Docker. Você também pode fazer isso pelo painel do Maven na IDE (clean > package).
+
 ```bash
+# 1. Empacota a aplicação ignorando os testes
 ./mvnw clean package -DskipTests
+
+# 2. Derruba os containers antigos (caso estejam rodando)
+docker compose -f docker-compose.dev.yml down
+
+# 3. Sobe a infraestrutura forçando o build da nova imagem
+docker compose --env-file .env.dev -f docker-compose.dev.yml up -d --build
