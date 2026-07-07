@@ -3,7 +3,7 @@ version: '3.8'
 services:
   accesos-ms:
     container_name: redec-accesos-ms
-    build:
+    build: #build serve para criar a imagem do container a partir do Dockerfile (empacota apenas o java e o jar do projeto)
       context: .
       dockerfile: Dockerfile
     ports:
@@ -17,10 +17,12 @@ services:
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_DEFAULT_USER}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     env_file:
       - .env.dev
     depends_on:
       - rabbitmq
+      - mysql #garante que o banco suba antes da aplicacao
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -32,3 +34,14 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+        - "${MYSQL_PORT}:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+    env_file:
+      - .env.dev

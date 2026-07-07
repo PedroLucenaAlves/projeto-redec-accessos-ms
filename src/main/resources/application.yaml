@@ -6,3 +6,12 @@ spring:
     port: 5672
     username: ${SPRING_RABBITMQ_USERNAME:admin}
     password: ${SPRING_RABBITMQ_PASSWORD:redec123}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/accessos_terceros?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC} # useSSL=false&allowPublicKeyRetrieval=true serve para evitar o erro: Public Key Retrieval is not allowed, gerado em execucao de testes.
+    username: ${MYSQL_USERNAME:root} #Segue o padrao de 2 valores (docker:local)
+    password: ${MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update #faz com que o HIbernate crie/atualize as tabelas do banco de dados automaticamente.Em prod, é recomendado usar o ddl-auto=none e criar as tabelas manualmente.
+    show-sql: true #exibe no log os sqls gerados durante a execucacao.
